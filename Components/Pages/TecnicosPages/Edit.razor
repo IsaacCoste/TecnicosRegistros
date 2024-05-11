@@ -1,0 +1,83 @@
+﻿@page "/TecnicoEdit/"
+@page "/TecnicoEdit/{TecnicoId:int}"
+@inject TecnicosServices tecnicoservice
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+@*Validacio al guardar*@
+<EditForm Model="Tecnico" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card-header">
+        <h1>Editar T&eacute;cnico</h1>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <label>ID:</label>
+                <div class="input-group">
+                    <InputNumber min="0" @bind-Value="Tecnico.TecnicoId" class="form-control" READONLY></InputNumber>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Nombre:</label>
+                <InputText @bind-Value="Tecnico.Nombres" class="form-control"></InputText>
+                <ValidationMessage For="@(() => Tecnico.Nombres)" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Sueldo Hora:</label>
+                <InputNumber @bind-Value="Tecnico.SueldoHora" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => Tecnico.SueldoHora)" />
+            </div>
+        </div>
+        <br />
+        <div class="card-footer">
+            <button type="submit" class="btn btn-success">Guardar <i class="bi bi-floppy-fill" /></button>
+            <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
+        </div>
+    </div>
+</EditForm>
+@code {
+        [Parameter]
+        public int? TecnicoId { get; set; }
+        public Tecnicos Tecnico { get; set; } = new Tecnicos();
+
+        protected override async Task OnInitializedAsync()
+        {
+        if (TecnicoId > 0)
+        {
+            Tecnico.TecnicoId = TecnicoId.Value;
+            await Buscar();
+        }
+        }
+        public async Task Buscar()
+        {
+        var TecnicoEncontrado = await tecnicoservice.Buscar(Tecnico.TecnicoId);
+
+        if (TecnicoEncontrado != null)
+        {
+            Tecnico = TecnicoEncontrado;
+        }
+        }
+        public async Task<bool> Guardar()
+        {
+        var guardo = await tecnicoservice.Guardar(Tecnico);
+        if (guardo)
+        {
+            await Volver();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        }
+        public Task Volver()
+        {
+        NavigationManager.NavigateTo("/TecnicoIndex");
+        return Task.CompletedTask;
+        }
+}
