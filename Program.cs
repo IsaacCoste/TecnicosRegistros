@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using TecnicosRegistros.Components;
+using TecnicosRegistros.DAL;
+using TecnicosRegistros.Services;
 
 namespace TecnicosRegistros
 {
@@ -7,6 +10,10 @@ namespace TecnicosRegistros
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var ConStr = builder.Configuration.GetConnectionString("ConStr");
+            builder.Services.AddDbContext<Contexto>(options => options.UseSqlite(ConStr));
+            builder.Services.AddScoped<TecnicosServices>();
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
