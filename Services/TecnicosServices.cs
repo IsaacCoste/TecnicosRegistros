@@ -40,10 +40,10 @@ public class TecnicosServices
             .ExecuteDeleteAsync();
         return cantidad > 0;
     }
-    public async Task<Tecnicos?> Buscar(int MetaId)
+    public async Task<Tecnicos?> Buscar(int TecnicoId)
     {
         return await _contexto.Tecnicos
-            .Where(a => a.TecnicoId == MetaId)
+            .Where(a => a.TecnicoId == TecnicoId)
             .AsNoTracking()
             .SingleOrDefaultAsync();
     }
