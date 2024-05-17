@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 
 @*Validacio al guardar*@
-<EditForm Model="Tecnico" OnValidSubmit="Guardar">
+<EditForm Model="Tecnico" OnValidSubmit="Modificar">
     <DataAnnotationsValidator />
     <div class="card">
         <div class="card-header bg-warning text-center">
@@ -35,7 +35,7 @@
             </div>
             <br />
             <div class="card-footer text-center">
-                <button type="submit" class="btn btn-success">Guardar <i class="bi bi-floppy-fill" /></button>
+                <button type="submit" class="btn btn-success">Modificar <i class="bi bi-floppy-fill" /></button>
                 <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
             </div>
         </div>
@@ -64,7 +64,7 @@
         HayTecnico = listaTecnico.Any();
         return HayTecnico;
     }
-    public async Task Guardar()
+    public async Task Modificar()
     {
         if (await Validar())
         {
