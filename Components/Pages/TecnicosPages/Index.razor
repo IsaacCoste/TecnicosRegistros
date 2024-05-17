@@ -1,21 +1,19 @@
-﻿@page "/TecnicoIndex"
-@page "/TecnicoIndex{TecnicoId:int}"
-@inject TecnicosServices tecnicoservice
+﻿@page "/Tecnico/Index/"
+@inject TecnicoService tecnicoService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 @*Consulta*@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header bg-warning text-center">
         <h1>Consulta T&eacute;cnico</h1>
-        <div class="d-flex align-items-start">
+    </div>
+    <div class="card-body">
+        <div class="text-end">
             <div class="px-1">
                 <button type="button" class="btn btn-outline-primary" @onclick="Crear">Crear</button>
             </div>
         </div>
-    </div>
-    <div class="card-body">
-        <br>
         @*Filtrar con sus condiciones*@
         <div class="row">
             <div class="col-md-0.5">
@@ -33,13 +31,13 @@
                 {
                     case 1:
                         <div class="input-group">
-                            <InputNumber min="1" @bind-Value="tecnico.TecnicoId" class="form-control"></InputNumber>
+                            <InputNumber min="1" @bind-Value="Tecnico.TecnicoId" class="form-control"></InputNumber>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"></button>
                         </div>
                         break;
                     case 2:
                         <div class="input-group">
-                            <InputNumber min="0.01" @bind-Value="tecnico.SueldoHora" class="form-control"></InputNumber>
+                            <InputNumber min="0.01" @bind-Value="Tecnico.SueldoHora" class="form-control"></InputNumber>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"></button>
                         </div>
                         break;
@@ -50,7 +48,7 @@
         @*Tabla Tecnicos*@
         <table class="table">
             <thead>
-                <tr bgcolor="9FBB73">
+                <tr>
                     <th>ID</th>
                     <th>Nombres</th>
                     <th>Sueldo Hora</th>
@@ -68,13 +66,13 @@
                         <td>@tecnico.Nombres</td>
                         <td>@tecnico.SueldoHora</td>
                         <td>
-                            <a href="/TecnicoDetails/@tecnico.TecnicoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
+                            <a href="/Tecnico/Details/@tecnico.TecnicoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
                         </td>
                         <td>
-                            <a href="/TecnicoEdit/@tecnico.TecnicoId" class="bi bi-journal-medical" style="font-size: 1.5em;"></a>
+                            <a href="/Tecnico/Edit/@tecnico.TecnicoId" class="bi bi-journal-medical" style="font-size: 1.5em;"></a>
                         </td>
                         <td>
-                            <a href="/TecnicoDelete/@tecnico.TecnicoId" class="bi bi-trash" style="font-size: 1.5em;"></a>
+                            <a href="/Tecnico/Delete/@tecnico.TecnicoId" class="bi bi-trash" style="font-size: 1.5em;"></a>
                         </td>
                     </tr>
                 }
@@ -83,7 +81,7 @@
         <div class="card-footer">
             <div class="row">
                 <div class="col-md-9">
-                    <h6 class="align-content-between">Total de T&eacute;cnicos: @Total</h6>
+                    <h6 class="align-content-between">Total de T&eacute;cnicos: @ListaTecnicos.Count()</h6>
                 </div>
                 <div class="col-md-3 text-right">
                     <h6 class="align-content-end">Total de Sueldo Hora: @TotalSueldoHora</h6>
@@ -94,37 +92,32 @@
 </div>
 
 @code {
-    [Parameter]
-    public int? TecnicoId { get; set; }
-    public Tecnicos tecnico { get; set; } = new Tecnicos();
+    public Tecnicos Tecnico { get; set; } = new Tecnicos();
     public List<Tecnicos> ListaTecnicos { get; set; } = new List<Tecnicos>();
-    public int Total => ListaTecnicos.Count;
     public decimal TotalSueldoHora => ListaTecnicos.Sum(tecnico => tecnico.SueldoHora);
     public int? Opción { get; set; } = 0;
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarTecnico();
-    }
-    private async Task CargarTecnico()
-    {
-        ListaTecnicos = await tecnicoservice.Listar(a => true);
+        ListaTecnicos = await tecnicoService.Listar(t => true);
     }
     public async Task Buscar()
     {
         switch (Opción)
         {
             case 1:
-                ListaTecnicos = await tecnicoservice.Listar(a => a.TecnicoId == tecnico.TecnicoId);
+                ListaTecnicos = await tecnicoService
+                .Listar(t => t.TecnicoId == Tecnico.TecnicoId);
                 break;
             case 2:
-                ListaTecnicos = await tecnicoservice.Listar(a => a.SueldoHora == tecnico.SueldoHora);
+                ListaTecnicos = await tecnicoService
+                .Listar(t => t.SueldoHora == Tecnico.SueldoHora);
                 break;
         }
     }
     public Task Crear()
     {
-        NavigationManager.NavigateTo("/TecnicoCreate");
+        NavigationManager.NavigateTo("/Tecnico/Create/");
         return Task.CompletedTask;
     }
 }
