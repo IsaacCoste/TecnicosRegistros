@@ -1,34 +1,31 @@
-﻿@page "/TecnicoDelete/"
-@page "/TecnicoDelete/{TecnicoId:int}"
-@inject TecnicosServices tecnicoservice
+﻿@page "/Tecnico/Delete/{TecnicoId:int}"
+@inject TecnicoService tecnicoService
 @inject NavigationManager navigationManager;
 @rendermode InteractiveServer
 
-@if (Tecnico != null)
-{
-    <div class="card">
-        <div class="card-header">
-            <h1>Eliminar T&eacute;cnico</h1>
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">¡Desea eliminar el T&eacute;cnico!</h5>
-            <dl class="row">
-                <dt class="col-sm-3">ID:</dt>
-                <dd class="col-sm-9">@Tecnico.TecnicoId</dd>
-
-                <dt class="col-sm-3">Nombre:</dt>
-                <dd class="col-sm-9">@Tecnico.Nombres</dd>
-
-                <dt class="col-sm-3">Sueldo Hora:</dt>
-                <dd class="col-sm-9">@Tecnico.SueldoHora</dd>
-            </dl>
-        </div>
-        <div class="card-footer text-lg-center">
-            <button type="button" class="btn btn-danger" @onclick="Eliminar">Eliminar <i class="bi bi-trash3" /></button>
-            <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
-        </div>
+<div class="card">
+    <div class="card-header bg-warning">
+        <h1>Eliminar T&eacute;cnico</h1>
     </div>
-}
+    <div class="card-body">
+        <h5 class="card-title">¡Desea eliminar el T&eacute;cnico!</h5>
+        <dl class="row">
+            <dt class="col-sm-3">ID:</dt>
+            <dd class="col-sm-9">@Tecnico.TecnicoId</dd>
+
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@Tecnico.Nombres</dd>
+
+            <dt class="col-sm-3">Sueldo Hora:</dt>
+            <dd class="col-sm-9">@Tecnico.SueldoHora</dd>
+        </dl>
+    </div>
+    <div class="card-footer text-lg-center">
+        <button type="button" class="btn btn-danger" @onclick="Eliminar">Eliminar <i class="bi bi-trash3" /></button>
+        <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
+    </div>
+</div>
+
 @code {
     [Parameter]
     public int TecnicoId { get; set; }
@@ -38,32 +35,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (TecnicoId > 0)
-        {
             Tecnico.TecnicoId = TecnicoId;
-            await Buscar();
-        }
-    }
-    public async Task Buscar()
-    {
-        var TecnicoEncontrado = await tecnicoservice.Buscar(Tecnico.TecnicoId);
-
-        if (TecnicoEncontrado != null)
-        {
-            this.Tecnico = TecnicoEncontrado;
-        }
+            Tecnico = await tecnicoService.Buscar(Tecnico.TecnicoId);
     }
     public async Task Eliminar()
     {
         if (Tecnico.TecnicoId > 0)
         {
-            await tecnicoservice.Eliminar(Tecnico);
+            await tecnicoService.Eliminar(Tecnico);
             await Volver();
         }
     }
     public Task Volver()
     {
-        navigationManager.NavigateTo("/TecnicoIndex");
+        navigationManager.NavigateTo("/Tecnico/Index");
         return Task.CompletedTask;
     }
 }
