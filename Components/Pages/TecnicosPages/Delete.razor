@@ -30,21 +30,18 @@
     [Parameter]
     public int TecnicoId { get; set; }
     public Tecnicos Tecnico { get; set; } = new Tecnicos();
-
     public string Notification { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-            Tecnico.TecnicoId = TecnicoId;
-            Tecnico = await tecnicoService.Buscar(Tecnico.TecnicoId);
+        Tecnico.TecnicoId = TecnicoId;
+        Tecnico = await tecnicoService.Buscar(Tecnico.TecnicoId);
     }
     public async Task Eliminar()
     {
-        if (Tecnico.TecnicoId > 0)
-        {
             await tecnicoService.Eliminar(Tecnico);
+            Notification = "El tecnico se elimino correctamente.";
             await Volver();
-        }
     }
     public Task Volver()
     {
