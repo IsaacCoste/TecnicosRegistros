@@ -1,70 +1,52 @@
-﻿@page "/TecnicoCreate/"
-@page "/TecnicoCreate/{TecnicoId:int}"
-@inject TecnicosServices tecnicoservice
+﻿@page "/Tecnico/Create/"
+@inject TecnicoService tecnicoservice
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
 <EditForm Model="Tecnico" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
-    <div class="card-header">
-        <h1>Crear T&eacute;cnico</h1>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-4">
-                <label>ID:</label>
-                <div class="input-group">
-                    <InputNumber min="0" @bind-Value="Tecnico.TecnicoId" class="form-control" READONLY></InputNumber>
+    <div class="card">
+        <div class="card-header bg-warning text-center">
+            <h1>Crear T&eacute;cnico</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>ID:</label>
+                    <div class="input-group">
+                        <InputNumber min="0" @bind-Value="Tecnico.TecnicoId" class="form-control" READONLY></InputNumber>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label>Nombre:</label>
-                <InputText @bind-Value="Tecnico.Nombres" class="form-control"></InputText>
-                <ValidationMessage For="@(() => Tecnico.Nombres)" />
+            <div class="row">
+                <div class="col-md">
+                    <label>Nombre:</label>
+                    <InputText @bind-Value="Tecnico.Nombres" class="form-control"></InputText>
+                    <ValidationMessage For="@(() => Tecnico.Nombres)" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    <label>Sueldo Hora:</label>
+                    <InputNumber @bind-Value="Tecnico.SueldoHora" class="form-control"></InputNumber>
+                    <ValidationMessage For="@(() => Tecnico.SueldoHora)" />
+                </div>
+            </div>
+            <br />
+            <div class="card-footer text-center">
+                <button type="submit" class="btn btn-success">Guardar <i class="bi bi-floppy-fill" /></button>
+                <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label>Sueldo Hora:</label>
-                <InputNumber @bind-Value="Tecnico.SueldoHora" class="form-control"></InputNumber>
-                <ValidationMessage For="@(() => Tecnico.SueldoHora)" />
-            </div>
-        </div>
-        <br />
-        <div class="card-footer">
-            <button type="submit" class="btn btn-success">Guardar <i class="bi bi-floppy-fill" /></button>
-            <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
-        </div>
+        <p>@Notification</p>
     </div>
-    <p>@Notification</p>
 </EditForm>
 
 @code {
-    [Parameter]
-    public int? TecnicoId { get; set; }
     public Tecnicos Tecnico { get; set; } = new Tecnicos();
     private bool HayTecnico = false;
     public string Notification { get; set; } = string.Empty;
 
-    protected override async Task OnInitializedAsync()
-    {
-        if (TecnicoId > 0)
-        {
-            Tecnico.TecnicoId = TecnicoId.Value;
-            await Buscar();
-        }
-    }
-    public async Task Buscar()
-    {
-        var TecnicoEncontrado = await tecnicoservice.Buscar(Tecnico.TecnicoId);
-
-        if (TecnicoEncontrado != null)
-        {
-            Tecnico = TecnicoEncontrado;
-        }
-    }
     public async Task<bool> Validar()
     {
         var listaTecnico = await tecnicoservice
@@ -84,13 +66,13 @@
         var guardo = await tecnicoservice.Guardar(Tecnico);
         if (guardo)
         {
-            await Volver();
             Notification = "Se Guardo los datos correctamente";
+            await Volver();
         }
     }
     public Task Volver()
     {
-        NavigationManager.NavigateTo("/TecnicoIndex");
+        NavigationManager.NavigateTo("/Tecnico/Index");
         return Task.CompletedTask;
     }
 }
