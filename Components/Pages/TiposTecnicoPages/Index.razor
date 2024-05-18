@@ -1,0 +1,117 @@
+﻿@page "/Tipo/Index/"
+@inject TiposTecnicoService tiposTecnicoService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+@*Consulta*@
+<div class="card">
+    <div class="card-header bg-warning text-center">
+        <h1>Consulta T&eacute;cnico</h1>
+    </div>
+    <div class="card-body">
+        <div class="text-end">
+            <div class="px-1">
+                <button type="button" class="btn btn-outline-primary" @onclick="Crear">Crear</button>
+            </div>
+        </div>
+        @*Filtrar con sus condiciones*@
+        <div class="row">
+            <div class="col-md-0.5">
+                <label>Buscar por:</label>
+            </div>
+            <div class="col-md-3">
+                <InputSelect @bind-Value="Opción" class="form-select">
+                    <option value="0">Seleccione el Campo</option>
+                    <option value="1">ID</option>
+                    <option value="2">Descripci&oacute;n</option>
+                </InputSelect>
+            </div>
+            <div class="col-auto">
+                @switch (Opción)
+                {
+                    case 1:
+                        <div class="input-group">
+                            <InputNumber min="1" @bind-Value="TipoTecnico.TipoId" class="form-control"></InputNumber>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
+                        </div>
+                        break;
+                    case 2:
+                        <div class="input-group">
+                            <InputText @bind-Value="TipoTecnico.Descripción" class="form-control"></InputText>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
+                        </div>
+                        break;
+                }
+            </div>
+        </div>
+        <br>
+        @*Tabla Tecnicos*@
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descripci&oacute;n</th>
+                    <th>Detalle</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            @*Datos Tecnicos*@
+            <tbody>
+                @foreach (var TipoTecnico in ListaTipos)
+                {
+                    <tr>
+                        <td>@TipoTecnico.TipoId</td>
+                        <td>@TipoTecnico.Descripción</td>
+                        <td>
+                            <a href="/Tipo/Details/@TipoTecnico.TipoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
+                        </td>
+                        <td>
+                            <a href="/Tipo/Edit/@TipoTecnico.TipoId" class="bi bi-journal-medical" style="font-size: 1.5em;"></a>
+                        </td>
+                        <td>
+                            <a href="/Tipo/Delete/@TipoTecnico.TipoId" class="bi bi-trash" style="font-size: 1.5em;"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-md-9">
+                    <h6 class="align-content-between">Total de T&eacute;cnicos: @ListaTipos.Count()</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
+    public List<TiposTecnicos> ListaTipos { get; set; } = new List<TiposTecnicos>();
+    public int? Opción { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaTipos = await tiposTecnicoService.Listar(t => true);
+    }
+    public async Task Buscar()
+    {
+        switch (Opción)
+        {
+            case 1:
+                ListaTipos = await tiposTecnicoService
+                .Listar(t => t.TipoId == TipoTecnico.TipoId);
+                break;
+            case 2:
+                ListaTipos = await tiposTecnicoService
+                .Listar(t => t.Descripción == TipoTecnico.Descripción);
+                break;
+        }
+    }
+    public Task Crear()
+    {
+        NavigationManager.NavigateTo("/Tipo/Create/");
+        return Task.CompletedTask;
+    }
+}
