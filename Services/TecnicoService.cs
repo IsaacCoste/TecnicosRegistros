@@ -21,12 +21,16 @@ public class TecnicoService
         _contexto.Update(tecnico);
         return await _contexto.SaveChangesAsync() > 0;
     }
-    private async Task<bool> Existe(int tecnicoId)
+    public async Task<bool> Existe(int tecnicoId)
     {
         return await _contexto.Tecnicos
             .AnyAsync(t => t.TecnicoId == tecnicoId);
     }
-    
+    public async Task<bool> Existe(int tecnicoId, string? nombres)
+    {
+        return await _contexto.Tecnicos
+            .AnyAsync(t => t.TecnicoId != tecnicoId && t.Nombres.Equals(nombres));
+    }
     public async Task<bool> Guardar(Tecnicos tecnico)
     {
         if (!await Existe(tecnico.TecnicoId))
