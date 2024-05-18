@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Pages\TiposTecnicoPages\" />
     <Folder Include="Data\" />
   </ItemGroup>
 
