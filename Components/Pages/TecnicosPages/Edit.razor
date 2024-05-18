@@ -1,5 +1,6 @@
 ﻿@page "/Tecnico/Edit/{TecnicoId:int}"
 @inject TecnicoService tecnicoService
+@inject TiposTecnicoService tiposTecnicoService
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
@@ -33,6 +34,19 @@
                     <ValidationMessage For="@(() => Tecnico.SueldoHora)" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md">
+                    <label>Tipos T&eacute;cnico</label>
+                    <InputSelect @bind-Value="Tecnico.TipoId" class="form-control">
+                        <option value="0">Seleccione el Tipo de T&eacute;cnico</option>
+                        @foreach (var item in ListTipos)
+                        {
+                            <option value="@item.TipoId">@item.Descripción</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Tecnico.TipoId)" />
+                </div>
+            </div>
             <br />
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-success">Modificar <i class="bi bi-floppy-fill" /></button>
@@ -47,13 +61,15 @@
     [Parameter]
     public int TecnicoId { get; set; }
     public Tecnicos Tecnico { get; set; } = new Tecnicos();
+    public List<TiposTecnicos> ListTipos { get; set; } = new List<TiposTecnicos>();
     private bool HayTecnico = false;
     public string Notification { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-            Tecnico.TecnicoId = TecnicoId;
-            Tecnico = await tecnicoService.Buscar(Tecnico.TecnicoId);
+        Tecnico.TecnicoId = TecnicoId;
+        Tecnico = await tecnicoService.Buscar(Tecnico.TecnicoId);
+        ListTipos = await tiposTecnicoService.Listar(t => true);
     }
     public async Task<bool> Validar()
     {

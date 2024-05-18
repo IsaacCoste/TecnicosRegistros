@@ -1,0 +1,48 @@
+﻿@page "/Tipo/Delete/{TipoId:int}"
+@inject TiposTecnicoService tiposTecnicoService
+@inject NavigationManager navigationManager;
+@rendermode InteractiveServer
+
+<div class="card">
+    <div class="card-header bg-warning">
+        <h1>Eliminar Tipo de T&eacute;cnico</h1>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">¡Desea eliminar el Tipo de T&eacute;cnico!</h5>
+        <dl class="row">
+            <dt class="col-sm-3">ID:</dt>
+            <dd class="col-sm-9">@TipoTecnico.TipoId</dd>
+
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@TipoTecnico.Descripción</dd>
+        </dl>
+    </div>
+    <div class="card-footer text-lg-center">
+        <button type="button" class="btn btn-danger" @onclick="Eliminar">Eliminar <i class="bi bi-trash3" /></button>
+        <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int TipoId { get; set; }
+    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
+    public string Notification { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TipoTecnico.TipoId = TipoId;
+        TipoTecnico = await tiposTecnicoService.Buscar(TipoTecnico.TipoId);
+    }
+    public async Task Eliminar()
+    {
+        await tiposTecnicoService.Eliminar(TipoTecnico);
+        Notification = "El tecnico se elimino correctamente.";
+        await Volver();
+    }
+    public Task Volver()
+    {
+        navigationManager.NavigateTo("/Tipo/Index");
+        return Task.CompletedTask;
+    }
+}

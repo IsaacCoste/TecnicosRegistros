@@ -1,5 +1,6 @@
 ﻿@page "/Tecnico/Create/"
 @inject TecnicoService tecnicoService
+@inject TiposTecnicoService tiposTecnicoSevice
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
@@ -32,6 +33,19 @@
                     <ValidationMessage For="@(() => Tecnico.SueldoHora)" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md">
+                    <label>Descripci&oacute;n</label>
+                    <InputSelect @bind-Value="Tecnico.TipoId" class="form-control">
+                        <option value="0">Seleccione el Tipo de T&eacute;cnico</option>
+                        @foreach (var item in ListTipos)
+                        {
+                            <option value="@item.TipoId">@item.Descripción</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Tecnico.TipoId)" />
+                </div>
+            </div>
             <br />
             <div class="card-footer text-center">
                 <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
@@ -45,9 +59,13 @@
 
 @code {
     public Tecnicos Tecnico { get; set; } = new Tecnicos();
+    public List<TiposTecnicos> ListTipos { get; set; } = new List<TiposTecnicos>();
     private bool HayTecnico = false;
     public string Notification { get; set; } = string.Empty;
-
+    protected async override Task OnInitializedAsync()
+    {
+        ListTipos = await tiposTecnicoSevice.Listar(t => true);
+    }
     public async Task<bool> Validar()
     {
         HayTecnico = await tecnicoService.Existe(Tecnico.TecnicoId, Tecnico.Nombres);
