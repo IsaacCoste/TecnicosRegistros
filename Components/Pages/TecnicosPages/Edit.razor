@@ -39,8 +39,8 @@
                 <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
             </div>
         </div>
+        <p>@Notification</p>
     </div>
-    <p>@Notification</p>
 </EditForm>
 
 @code {
@@ -57,16 +57,12 @@
     }
     public async Task<bool> Validar()
     {
-        var listaTecnico = await tecnicoService
-        .Listar(t => t.Nombres!
-            .ToLower() == Tecnico.Nombres!
-            .ToLower() && t.TecnicoId != Tecnico.TecnicoId);
-        HayTecnico = listaTecnico.Any();
-        return HayTecnico;
+        HayTecnico = await tecnicoService.Existe(Tecnico.TecnicoId, Tecnico.Nombres);
+        return !HayTecnico;
     }
     public async Task Modificar()
     {
-        if (await Validar())
+        if (!await Validar())
         {
             Notification = "Ya existe un técnico con este nombre.";
             return;
