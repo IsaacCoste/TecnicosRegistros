@@ -1,0 +1,73 @@
+﻿@page "/Tipo/Create/"
+@inject TiposTecnicoService tiposTecnicoService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<EditForm Model="TipoTecnico" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header bg-warning text-center">
+            <h1>Crear Tipo de T&eacute;cnico</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>ID:</label>
+                    <div class="input-group">
+                        <InputNumber min="0" @bind-Value="TipoTecnico.TipoId" class="form-control" READONLY></InputNumber>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    <label>Descripci&oacute;n:</label>
+                    <InputText @bind-Value="TipoTecnico.Descripción" class="form-control"></InputText>
+                    <ValidationMessage For="@(() => TipoTecnico.Descripción)" />
+                </div>
+            </div>
+            <br />
+            <div class="card-footer text-center">
+                <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
+                <button type="submit" class="btn btn-success">Guardar <i class="bi bi-floppy-fill" /></button>
+                <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
+            </div>
+            <p>@Notification</p>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
+    private bool HayTipo = false;
+    public string Notification { get; set; } = string.Empty;
+
+    private async Task<bool> Validar()
+    {
+        HayTipo = await tiposTecnicoService.Existe(TipoTecnico.TipoId, TipoTecnico.Descripción);
+        return !HayTipo;
+    }
+    public async Task Guardar()
+    {
+        if (!await Validar())
+        {
+            Notification = "Ya existe un técnico con este nombre.";
+            return;
+        }
+        var guardo = await tiposTecnicoService.Guardar(TipoTecnico);
+        if (guardo)
+        {
+            Notification = "Se Guardo los datos correctamente";
+        }
+    }
+    public Task Volver()
+    {
+        NavigationManager.NavigateTo("/Tipo/Index");
+        return Task.CompletedTask;
+    }
+    public Task Nuevo()
+    {
+        TipoTecnico = new TiposTecnicos();
+        HayTipo = false;
+        return Task.CompletedTask;
+    }
+}
