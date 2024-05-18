@@ -24,6 +24,8 @@
                     <option value="0">Seleccione el Campo</option>
                     <option value="1">ID</option>
                     <option value="2">Sueldo Hora</option>
+                    <option value="3">Tipo T&eacute;cnico</option>
+
                 </InputSelect>
             </div>
             <div class="col-auto">
@@ -32,13 +34,19 @@
                     case 1:
                         <div class="input-group">
                             <InputNumber min="1" @bind-Value="Tecnico.TecnicoId" class="form-control"></InputNumber>
-                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"></button>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
                         </div>
                         break;
                     case 2:
                         <div class="input-group">
                             <InputNumber min="0.01" @bind-Value="Tecnico.SueldoHora" class="form-control"></InputNumber>
-                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"></button>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
+                        </div>
+                        break;
+                    case 3:
+                        <div class="input-group">
+                            <InputNumber min="0.01" @bind-Value="Tecnico.TipoId" class="form-control"></InputNumber>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
                         </div>
                         break;
                 }
@@ -52,6 +60,7 @@
                     <th>ID</th>
                     <th>Nombres</th>
                     <th>Sueldo Hora</th>
+                    <th>Tipo T&eacute;cnico</th>
                     <th>Detalle</th>
                     <th>Editar</th>
                     <th>Eliminar</th>
@@ -65,6 +74,7 @@
                         <td>@tecnico.TecnicoId</td>
                         <td>@tecnico.Nombres</td>
                         <td>@tecnico.SueldoHora</td>
+                        <td>@tecnico.TipoId</td>
                         <td>
                             <a href="/Tecnico/Details/@tecnico.TecnicoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
                         </td>
@@ -93,6 +103,7 @@
 
 @code {
     public Tecnicos Tecnico { get; set; } = new Tecnicos();
+    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
     public List<Tecnicos> ListaTecnicos { get; set; } = new List<Tecnicos>();
     public decimal TotalSueldoHora => ListaTecnicos.Sum(tecnico => tecnico.SueldoHora);
     public int? Opción { get; set; } = 0;
@@ -112,6 +123,9 @@
             case 2:
                 ListaTecnicos = await tecnicoService
                 .Listar(t => t.SueldoHora == Tecnico.SueldoHora);
+                break;
+            case 3:
+                ListaTecnicos = await tecnicoService.Listar(t => t.TipoId == Tecnico.TipoId);
                 break;
         }
     }
