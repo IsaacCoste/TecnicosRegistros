@@ -46,7 +46,7 @@
                         break;
                     case 3:
                         <div class="input-group">
-                            <InputText min="1" @bind-Value="Filtrar" class="form-control"></InputText>
+                            <InputText @bind-Value="Filtrar" class="form-control"></InputText>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
                         </div>
                         break;
@@ -77,7 +77,7 @@
                         <td>@tecnico.SueldoHora</td>
                         <td>@(ListTipos.FirstOrDefault(t => t.TipoId == tecnico.TipoTecnicoId)?.Descripción)</td>
                         <td>
-                            <a href="/Tecnico/Details/@tecnico.TecnicoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
+                            <a href="/Tecnico/Details/@tecnico.TecnicoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a> 
                         </td>
                         <td>
                             <a href="/Tecnico/Edit/@tecnico.TecnicoId" class="bi bi-journal-medical" style="font-size: 1.5em;"></a>
