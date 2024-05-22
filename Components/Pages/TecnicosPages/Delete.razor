@@ -1,5 +1,6 @@
 ﻿@page "/Tecnico/Delete/{TecnicoId:int}"
 @inject TecnicoService tecnicoService
+@inject TiposTecnicoService tipoTecnicoService
 @inject NavigationManager navigationManager;
 @rendermode InteractiveServer
 
@@ -20,7 +21,7 @@
             <dd class="col-sm-9">@Tecnico.SueldoHora</dd>
 
             <dt class="col-sm-3">Tipo T&eacute;cnico:</dt>
-            <dd class="col-sm-9">@Tecnico.TipoId</dd>
+            <dd class="col-sm-9">@(ListTipos.FirstOrDefault(t => t.TipoId == Tecnico.TipoTecnicoId)?.Descripción)</dd>
         </dl>
     </div>
     <div class="card-footer text-lg-center">
@@ -33,18 +34,20 @@
     [Parameter]
     public int TecnicoId { get; set; }
     public Tecnicos Tecnico { get; set; } = new Tecnicos();
+    public List<TiposTecnicos> ListTipos { get; set; } = new List<TiposTecnicos>();
     public string Notification { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         Tecnico.TecnicoId = TecnicoId;
         Tecnico = await tecnicoService.Buscar(Tecnico.TecnicoId);
+        ListTipos = await tipoTecnicoService.Listar(t => true);
     }
     public async Task Eliminar()
     {
-            await tecnicoService.Eliminar(Tecnico);
-            Notification = "El tecnico se elimino correctamente.";
-            await Volver();
+        await tecnicoService.Eliminar(Tecnico);
+        Notification = "El tecnico se elimino correctamente.";
+        await Volver();
     }
     public Task Volver()
     {
