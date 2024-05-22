@@ -11,7 +11,7 @@ namespace TecnicosRegistros.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "TipoId",
+                name: "TipoTecnicoId",
                 table: "Tecnicos",
                 type: "INTEGER",
                 nullable: false,
@@ -22,7 +22,7 @@ namespace TecnicosRegistros.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "TipoId",
+                name: "TipoTecnicoId",
                 table: "Tecnicos");
         }
     }

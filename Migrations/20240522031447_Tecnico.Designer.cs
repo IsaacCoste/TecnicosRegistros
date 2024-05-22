@@ -10,7 +10,7 @@ using TecnicosRegistros.DAL;
 namespace TecnicosRegistros.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20240518154425_Tecnico")]
+    [Migration("20240522031447_Tecnico")]
     partial class Tecnico
     {
         /// <inheritdoc />
@@ -32,7 +32,7 @@ namespace TecnicosRegistros.Migrations
                     b.Property<decimal>("SueldoHora")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TipoId")
+                    b.Property<int>("TipoTecnicoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("TecnicoId");
