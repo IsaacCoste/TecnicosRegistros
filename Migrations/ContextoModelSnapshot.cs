@@ -29,7 +29,7 @@ namespace TecnicosRegistros.Migrations
                     b.Property<decimal>("SueldoHora")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TipoId")
+                    b.Property<int>("TipoTecnicoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("TecnicoId");
