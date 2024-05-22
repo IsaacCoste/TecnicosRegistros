@@ -20,14 +20,14 @@
                 <label>Buscar por:</label>
             </div>
             <div class="col-md-3">
-                <InputSelect @bind-Value="Opción" class="form-select">
+                <InputSelect @bind-Value="Opcion" class="form-select">
                     <option value="0">Seleccione el Campo</option>
                     <option value="1">ID</option>
                     <option value="2">Descripci&oacute;n</option>
                 </InputSelect>
             </div>
             <div class="col-auto">
-                @switch (Opción)
+                @switch (Opcion)
                 {
                     case 1:
                         <div class="input-group">
@@ -89,7 +89,7 @@
 @code {
     public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
     public List<TiposTecnicos> ListaTipos { get; set; } = new List<TiposTecnicos>();
-    public int? Opción { get; set; } = 0;
+    public int? Opcion { get; set; } = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,7 +97,7 @@
     }
     public async Task Buscar()
     {
-        switch (Opción)
+        switch (Opcion)
         {
             case 1:
                 ListaTipos = await tiposTecnicoService
