@@ -12,6 +12,6 @@ public class Tecnicos
     [Range(0.01, float.MaxValue, ErrorMessage = "Es obligatorio introducir el SueldoHora")]
     public decimal SueldoHora { get; set; }
     [Required(ErrorMessage = "El campo es obligatorio")]
-    [ForeignKey("TipoId")]
-    public int TipoId { get; set; }
+    [ForeignKey("TiposTecnicos")]
+    public int TipoTecnicoId { get; set; }
 }
