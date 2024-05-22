@@ -1,5 +1,6 @@
 ﻿@page "/Tecnico/Index/"
 @inject TecnicoService tecnicoService
+@inject TiposTecnicoService tipoTecnicoService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
@@ -45,7 +46,7 @@
                         break;
                     case 3:
                         <div class="input-group">
-                            <InputNumber min="1" @bind-Value="Tecnico.TipoId" class="form-control"></InputNumber>
+                            <InputText @bind-Value="Filtro" class="form-control" placeholder="Ej: Telecomunicaciones"></InputText>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
                         </div>
                         break;
@@ -74,7 +75,7 @@
                         <td>@tecnico.TecnicoId</td>
                         <td>@tecnico.Nombres</td>
                         <td>@tecnico.SueldoHora</td>
-                        <td>@tecnico.TipoId</td>
+                        <td>@(ListTipos.FirstOrDefault(t => t.TipoId == tecnico.TipoTecnicoId)?.Descripción)</td>
                         <td>
                             <a href="/Tecnico/Details/@tecnico.TecnicoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
                         </td>
@@ -103,14 +104,16 @@
 
 @code {
     public Tecnicos Tecnico { get; set; } = new Tecnicos();
-    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
     public List<Tecnicos> ListaTecnicos { get; set; } = new List<Tecnicos>();
+    public List<TiposTecnicos> ListTipos { get; set; } = new List<TiposTecnicos>();
     public decimal TotalSueldoHora => ListaTecnicos.Sum(tecnico => tecnico.SueldoHora);
     public int? Opción { get; set; } = 0;
+    private string Filtro = "";
 
     protected override async Task OnInitializedAsync()
     {
         ListaTecnicos = await tecnicoService.Listar(t => true);
+        ListTipos = await tipoTecnicoService.Listar(t => true);
     }
     public async Task Buscar()
     {
@@ -125,7 +128,10 @@
                 .Listar(t => t.SueldoHora == Tecnico.SueldoHora);
                 break;
             case 3:
-                ListaTecnicos = await tecnicoService.Listar(t => t.TipoId == Tecnico.TipoId);
+                var mismos = await tipoTecnicoService.Listar(t => t.Descripción.ToLower().Contains(Filtro.ToLower()));
+                var mimosTiposId = mismos.Select(t => t.TipoId).ToList();
+
+                ListaTecnicos = await tecnicoService.Listar(t => mimosTiposId.Contains(t.TipoTecnicoId));
                 break;
         }
     }
