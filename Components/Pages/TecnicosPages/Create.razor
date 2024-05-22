@@ -36,14 +36,14 @@
             <div class="row">
                 <div class="col-md">
                     <label>Descripci&oacute;n</label>
-                    <InputSelect @bind-Value="Tecnico.TipoId" class="form-control">
+                    <InputSelect @bind-Value="Tecnico.TipoTecnicoId" class="form-control">
                         <option value="0">Seleccione el Tipo de T&eacute;cnico</option>
                         @foreach (var item in ListTipos)
                         {
                             <option value="@item.TipoId">@item.Descripción</option>
                         }
                     </InputSelect>
-                    <ValidationMessage For="@(() => Tecnico.TipoId)" />
+                    <ValidationMessage For="@(() => Tecnico.TipoTecnicoId)" />
                 </div>
             </div>
             <br />
