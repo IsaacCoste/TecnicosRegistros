@@ -37,7 +37,7 @@
                         break;
                     case 2:
                         <div class="input-group">
-                            <InputText @bind-Value="TipoTecnico.Descripción" class="form-control"></InputText>
+                            <InputText @bind-Value="TipoTecnico.Descripcion" class="form-control"></InputText>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
                         </div>
                         break;
@@ -62,7 +62,7 @@
                 {
                     <tr>
                         <td>@TipoTecnico.TipoId</td>
-                        <td>@TipoTecnico.Descripción</td>
+                        <td>@TipoTecnico.Descripcion</td>
                         <td>
                             <a href="/Tipo/Details/@TipoTecnico.TipoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
                         </td>
@@ -105,7 +105,7 @@
                 break;
             case 2:
                 ListaTipos = await tiposTecnicoService
-                .Listar(t => t.Descripción == TipoTecnico.Descripción);
+                .Listar(t => t.Descripcion == TipoTecnico.Descripcion);
                 break;
         }
     }

@@ -26,10 +26,10 @@ namespace TecnicosRegistros.Services;
         return await _contexto.TiposTecnicos
             .AnyAsync(t => t.TipoId == tipoId);
     }
-    public async Task<bool> Existe(int tipoId, string? descripción)
+    public async Task<bool> Existe(int tipoId, string? Descripcion)
     {
         return await _contexto.TiposTecnicos
-            .AnyAsync(t => t.TipoId != tipoId && t.Descripción.Equals(descripción));
+            .AnyAsync(t => t.TipoId != tipoId && t.Descripcion.Equals(Descripcion));
     }
     public async Task<bool> Guardar(TiposTecnicos tiposTecnicos)
     {
