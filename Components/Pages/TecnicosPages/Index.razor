@@ -75,7 +75,7 @@
                         <td>@tecnico.TecnicoId</td>
                         <td>@tecnico.Nombres</td>
                         <td>@tecnico.SueldoHora</td>
-                        <td>@(ListTipos.FirstOrDefault(t => t.TipoId == tecnico.TipoTecnicoId)?.Descripcion)</td>
+                        <td>@tecnico.TiposTecnicos!.Descripcion</td>
                         <td>
                             <a href="/Tecnico/Details/@tecnico.TecnicoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a> 
                         </td>
