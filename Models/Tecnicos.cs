@@ -14,4 +14,6 @@ public class Tecnicos
     [Required(ErrorMessage = "El campo es obligatorio")]
     [ForeignKey("TiposTecnicos")]
     public int TipoTecnicoId { get; set; }
+
+    public TiposTecnicos? TiposTecnicos { get; set; }
 }
