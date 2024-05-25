@@ -11,7 +11,7 @@
         <h5 class="card-title">Detalles de Tipo T&eacute;cnico</h5>
         <dl class="row">
             <dt class="col-sm-3">ID:</dt>
-            <dd class="col-sm-9">@TipoTecnico.TipoId</dd>
+            <dd class="col-sm-9">@TipoTecnico!.TipoId</dd>
 
             <dt class="col-sm-3">Descripci&oacute;n:</dt>
             <dd class="col-sm-9">@TipoTecnico.Descripcion</dd>
@@ -25,13 +25,13 @@
 @code {
     [Parameter]
     public int TipoId { get; set; }
-    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
+    public TiposTecnicos? TipoTecnico { get; set; } = new TiposTecnicos();
 
     public string Notification { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        TipoTecnico.TipoId = TipoId;
+        TipoTecnico!.TipoId = TipoId;
         TipoTecnico = await tiposTecnicoService.Buscar(TipoTecnico.TipoId);
     }
     public void Volver()

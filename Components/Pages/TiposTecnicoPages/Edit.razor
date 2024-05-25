@@ -14,7 +14,7 @@
                 <div class="col-md-4">
                     <label>ID:</label>
                     <div class="input-group">
-                        <InputNumber min="0" @bind-Value="TipoTecnico.TipoId" class="form-control" READONLY></InputNumber>
+                        <InputNumber min="0" @bind-Value="TipoTecnico!.TipoId" class="form-control" READONLY></InputNumber>
                     </div>
                 </div>
             </div>
@@ -38,18 +38,18 @@
 @code {
     [Parameter]
     public int TipoId { get; set; }
-    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
+    public TiposTecnicos? TipoTecnico { get; set; } = new TiposTecnicos();
     private bool HayTipo = false;
     public string Notification { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        TipoTecnico.TipoId = TipoId;
+        TipoTecnico!.TipoId = TipoId;
         TipoTecnico = await tiposTecnicoService.Buscar(TipoTecnico.TipoId);
     }
     private async Task<bool> Validar()
     {
-        HayTipo = await tiposTecnicoService.Existe(TipoTecnico.TipoId, TipoTecnico.Descripcion);
+        HayTipo = await tiposTecnicoService.Existe(TipoTecnico!.TipoId, TipoTecnico.Descripcion);
         return !HayTipo;
     }
     public async Task Modificar()
@@ -59,7 +59,7 @@
             Notification = "Ya existe un técnico con este nombre.";
             return;
         }
-        var guardo = await tiposTecnicoService.Guardar(TipoTecnico);
+        var guardo = await tiposTecnicoService.Guardar(TipoTecnico!);
         if (guardo)
         {
             Notification = "Se Guardo los datos correctamente";
