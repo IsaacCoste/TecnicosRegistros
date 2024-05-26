@@ -54,8 +54,39 @@ namespace TecnicosRegistros.Services;
     public async Task<List<TiposTecnicos>> Listar(Expression<Func<TiposTecnicos, bool>> criterio)
     {
         return await _contexto.TiposTecnicos
+            .Include(t => t.Tecnicos)
             .AsNoTracking()
             .Where(criterio)
             .ToListAsync();
+    }
+    public async Task MontoIncentivos()
+    {
+        var tiposTecnicos = await _contexto.TiposTecnicos.ToListAsync();
+
+        foreach (var tipo in tiposTecnicos)
+        {
+            tipo.Incentivo = await CalcularMontoTotalIncentivos(tipo.TipoId);
+        }
+        await _contexto.SaveChangesAsync();
+    }
+    public async Task<decimal> CalcularMontoTotalIncentivos(int tipoId)
+    {
+        var montoTotal = await _contexto.Incentivos
+            .Where(i => i.Tecnicos.TipoTecnicoId == tipoId)
+            .SumAsync(i => (double)i.Monto);
+
+        return (decimal)montoTotal;
+    }
+    public async Task<List<TiposTecnicos>> ListarTotal()
+    {
+        var tiposTecnicos = await _contexto.TiposTecnicos
+            .Include(t => t.Tecnicos)
+            .ToListAsync();
+
+        foreach (var tipo in tiposTecnicos)
+        {
+            tipo.Incentivo = await CalcularMontoTotalIncentivos(tipo.TipoId);
+        }
+        return tiposTecnicos;
     }
 }

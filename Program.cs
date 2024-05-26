@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TecnicosRegistros.Components;
 using TecnicosRegistros.DAL;
+using TecnicosRegistros.Models;
 using TecnicosRegistros.Services;
 
 namespace TecnicosRegistros;
@@ -14,6 +15,7 @@ public class Program
         builder.Services.AddDbContext<Contexto>(options => options.UseSqlite(ConStr));
         builder.Services.AddScoped<TecnicoService>();
         builder.Services.AddScoped<TiposTecnicoService>();
+        builder.Services.AddScoped<IncentivoService>();
 
         builder.Services.AddBlazorBootstrap();
 

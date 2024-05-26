@@ -25,6 +25,13 @@
                     <ValidationMessage For="@(() => TipoTecnico.Descripcion)" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md">
+                    <label>Incentivo:</label>
+                    <InputNumber @bind-Value="TipoTecnico.Incentivo" class="form-control" Readonly></InputNumber>
+                    <ValidationMessage For="@(() => TipoTecnico.Incentivo)" />
+                </div>
+            </div>
             <br />
             <div class="card-footer text-center">
                 <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>

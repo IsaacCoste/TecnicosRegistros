@@ -1,12 +1,12 @@
-﻿@page "/Tipo/Index/"
-@inject TiposTecnicoService tiposTecnicoService
+﻿@page "/Incentivo/Index/"
+@inject IncentivoService incentivoService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 @*Consulta*@
 <div class="card">
     <div class="card-header bg-warning text-center">
-        <h1>Consulta T&eacute;cnico</h1>
+        <h1>Consulta Incentivo</h1>
     </div>
     <div class="card-body">
         <div class="text-end">
@@ -23,7 +23,7 @@
                 <InputSelect @bind-Value="Opcion" class="form-select">
                     <option value="0">Seleccione el Campo</option>
                     <option value="1">ID</option>
-                    <option value="2">Descripci&oacute;n</option>
+                    <option value="2">Tecnico</option>
                 </InputSelect>
             </div>
             <div class="col-auto">
@@ -31,13 +31,13 @@
                 {
                     case 1:
                         <div class="input-group">
-                            <InputNumber min="1" @bind-Value="TipoTecnico.TipoId" class="form-control"></InputNumber>
+                            <InputNumber min="1" @bind-Value="Incentivo!.IncentivoId" class="form-control"></InputNumber>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
                         </div>
                         break;
                     case 2:
                         <div class="input-group">
-                            <InputText @bind-Value="TipoTecnico.Descripcion" class="form-control"></InputText>
+                            <InputText @bind-Value="Incentivo.Tecnicos!.Nombres" class="form-control"></InputText>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Buscar"> Buscar</button>
                         </div>
                         break;
@@ -50,8 +50,11 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Fecha</th>
+                    <th>TecnicoId</th>
                     <th>Descripci&oacute;n</th>
-                    <th>Incentivo</th>
+                    <th>Cantidad Servicios</th>
+                    <th>Monto</th>
                     <th>Detalle</th>
                     <th>Editar</th>
                     <th>Eliminar</th>
@@ -59,20 +62,23 @@
             </thead>
             @*Datos Tecnicos*@
             <tbody>
-                @foreach (var TipoTecnico in ListaTipos)
+                @foreach (var Incentivo in ListaIncentivos)
                 {
                     <tr>
-                        <td>@TipoTecnico.TipoId</td>
-                        <td>@TipoTecnico.Descripcion</td>
-                        <td>@TipoTecnico.Incentivo</td>
+                        <td>@Incentivo.IncentivoId</td>
+                        <td>@Incentivo.Fecha.ToShortDateString()</td>
+                        <td>@Incentivo.Tecnicos!.TecnicoId</td>
+                        <td>@Incentivo.Descripcion</td>
+                        <td>@Incentivo.CantidadServicios</td>
+                        <td>@Incentivo.Monto</td>
                         <td>
-                            <a href="/Tipo/Details/@TipoTecnico.TipoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
+                            <a href="/Incentivo/Details/@Incentivo.IncentivoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
                         </td>
                         <td>
-                            <a href="/Tipo/Edit/@TipoTecnico.TipoId" class="bi bi-journal-medical" style="font-size: 1.5em;"></a>
+                            <a href="/Incentivo/Edit/@Incentivo.IncentivoId" class="bi bi-journal-medical" style="font-size: 1.5em;"></a>
                         </td>
                         <td>
-                            <a href="/Tipo/Delete/@TipoTecnico.TipoId" class="bi bi-trash" style="font-size: 1.5em;"></a>
+                            <a href="/Incentivo/Delete/@Incentivo.IncentivoId" class="bi bi-trash" style="font-size: 1.5em;"></a>
                         </td>
                     </tr>
                 }
@@ -81,7 +87,7 @@
         <div class="card-footer">
             <div class="row">
                 <div class="col-md-9">
-                    <h6 class="align-content-between">Total de T&eacute;cnicos: @ListaTipos.Count()</h6>
+                    <h6 class="align-content-between">Total de Incentivos: @ListaIncentivos.Count()</h6>
                 </div>
             </div>
         </div>
@@ -89,32 +95,30 @@
 </div>
 
 @code {
-    public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
-    public List<TiposTecnicos> ListaTipos { get; set; } = new List<TiposTecnicos>();
+    public Incentivos Incentivo { get; set; } = new Incentivos();
+    public List<Incentivos> ListaIncentivos { get; set; } = new List<Incentivos>();
     public int? Opcion { get; set; } = 0;
-
     protected override async Task OnInitializedAsync()
     {
-        await tiposTecnicoService.MontoIncentivos();
-        ListaTipos = await tiposTecnicoService.ListarTotal();
+        ListaIncentivos = await incentivoService.Listar(t => true);
     }
     public async Task Buscar()
     {
         switch (Opcion)
         {
             case 1:
-                ListaTipos = await tiposTecnicoService
-                .Listar(t => t.TipoId == TipoTecnico.TipoId);
+                ListaIncentivos = await incentivoService
+                .Listar(i => i.IncentivoId == Incentivo.IncentivoId);
                 break;
             case 2:
-                ListaTipos = await tiposTecnicoService
-                .Listar(t => t.Descripcion == TipoTecnico.Descripcion);
+                ListaIncentivos = await incentivoService
+                .Listar(t => t.Tecnicos!.Nombres == Incentivo.Tecnicos!.Nombres);
                 break;
         }
     }
     public Task Crear()
     {
-        NavigationManager.NavigateTo("/Tipo/Create/");
+        NavigationManager.NavigateTo("/Incentivo/Create/");
         return Task.CompletedTask;
     }
 }
