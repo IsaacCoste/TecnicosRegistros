@@ -15,6 +15,9 @@
 
             <dt class="col-sm-3">Descripci&oacute;n:</dt>
             <dd class="col-sm-9">@TipoTecnico.Descripcion</dd>
+
+            <dt class="col-sm-3">Incentivo:</dt>
+            <dd class="col-sm-9">@TipoTecnico.Incentivo</dd>
         </dl>
     </div>
     <div class="card-footer text-lg-center">
@@ -26,6 +29,7 @@
     [Parameter]
     public int TipoId { get; set; }
     public TiposTecnicos? TipoTecnico { get; set; } = new TiposTecnicos();
+    public List<TiposTecnicos> ListaTipos { get; set; } = new List<TiposTecnicos>();
 
     public string Notification { get; set; } = string.Empty;
 
@@ -33,6 +37,7 @@
     {
         TipoTecnico!.TipoId = TipoId;
         TipoTecnico = await tiposTecnicoService.Buscar(TipoTecnico.TipoId);
+        ListaTipos = await tiposTecnicoService.ListarTotal();
     }
     public void Volver()
     {
