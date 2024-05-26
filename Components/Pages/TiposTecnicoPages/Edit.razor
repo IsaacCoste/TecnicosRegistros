@@ -25,6 +25,13 @@
                     <ValidationMessage For="@(() => TipoTecnico.Descripcion)" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md">
+                    <label>Incentivo:</label>
+                    <InputNumber @bind-Value="TipoTecnico.Incentivo" class="form-control" Readonly></InputNumber>
+                    <ValidationMessage For="@(() => TipoTecnico.Incentivo)" />
+                </div>
+            </div>
             <br />
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-success">Modificar <i class="bi bi-floppy-fill" /></button>
@@ -39,6 +46,7 @@
     [Parameter]
     public int TipoId { get; set; }
     public TiposTecnicos? TipoTecnico { get; set; } = new TiposTecnicos();
+    public List<TiposTecnicos> ListaTipos { get; set; } = new List<TiposTecnicos>();
     private bool HayTipo = false;
     public string Notification { get; set; } = string.Empty;
 
@@ -46,6 +54,7 @@
     {
         TipoTecnico!.TipoId = TipoId;
         TipoTecnico = await tiposTecnicoService.Buscar(TipoTecnico.TipoId);
+        ListaTipos = await tiposTecnicoService.ListarTotal();
     }
     private async Task<bool> Validar()
     {
