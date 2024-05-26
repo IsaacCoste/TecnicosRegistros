@@ -51,6 +51,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Descripci&oacute;n</th>
+                    <th>Incentivo</th>
                     <th>Detalle</th>
                     <th>Editar</th>
                     <th>Eliminar</th>
@@ -63,6 +64,7 @@
                     <tr>
                         <td>@TipoTecnico.TipoId</td>
                         <td>@TipoTecnico.Descripcion</td>
+                        <td>@TipoTecnico.Incentivo</td>
                         <td>
                             <a href="/Tipo/Details/@TipoTecnico.TipoId" class="bi bi-eye-fill" style="font-size: 1.5em;"></a>
                         </td>
@@ -93,7 +95,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaTipos = await tiposTecnicoService.Listar(t => true);
+        await tiposTecnicoService.MontoIncentivos();
+        ListaTipos = await tiposTecnicoService.ListarTotal();
     }
     public async Task Buscar()
     {
