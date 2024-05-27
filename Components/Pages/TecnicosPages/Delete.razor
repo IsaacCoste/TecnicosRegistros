@@ -29,13 +29,14 @@
         <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
     </div>
 </div>
+<Toasts class="p-5" Messages="Mensaje" Placement="ToastsPlacement.TopRight" />
 
 @code {
     [Parameter]
     public int TecnicoId { get; set; }
     public Tecnicos? Tecnico { get; set; } = new Tecnicos();
     public List<TiposTecnicos> ListTipos { get; set; } = new List<TiposTecnicos>();
-    public string Notification { get; set; } = string.Empty;
+    List<ToastMessage> Mensaje = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,10 +44,22 @@
         Tecnico = await tecnicoService.Buscar(Tecnico.TecnicoId);
         ListTipos = await tipoTecnicoService.Listar(t => true);
     }
+    private void MostrarMensaje(ToastType toastType, string mensaje)
+    {
+        Mensaje.Add(CreateToastMenssage(toastType, mensaje));
+    }
+    private ToastMessage CreateToastMenssage(ToastType toastType, string mensaje) => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
     public async Task Eliminar()
     {
         await tecnicoService.Eliminar(Tecnico!);
-        Notification = "El tecnico se elimino correctamente.";
+        MostrarMensaje(ToastType.Warning, $"Se eliminaron los datos correctamente.");
+        await Task.Delay(1500);
         await Volver();
     }
     public Task Volver()
