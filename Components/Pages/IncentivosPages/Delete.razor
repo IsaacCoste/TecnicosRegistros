@@ -35,23 +35,36 @@
         <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
     </div>
 </div>
+<Toasts class="p-5" Messages="Mensaje" Placement="ToastsPlacement.TopRight" />
 
 @code {
     [Parameter]
     public int IncentivoId { get; set; }
     public Incentivos? Incentivo { get; set; } = new Incentivos();
     public List<Tecnicos> ListTecnicos { get; set; } = new List<Tecnicos>();
-    public string Notification { get; set; } = string.Empty;
+    List<ToastMessage> Mensaje = new List<ToastMessage>();
     protected override async Task OnParametersSetAsync()
     {
         Incentivo!.IncentivoId = IncentivoId;
         Incentivo = await incentivoService.Buscar(Incentivo.IncentivoId);
         ListTecnicos = await tecnicoService.Listar(t => true);
     }
+    private void MostrarMensaje(ToastType toastType, string mensaje)
+    {
+        Mensaje.Add(CreateToastMenssage(toastType, mensaje));
+    }
+    private ToastMessage CreateToastMenssage(ToastType toastType, string mensaje) => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
     public async Task Eliminar()
     {
         await incentivoService.Eliminar(Incentivo!);
-        Notification = "El incentivo se elimino correctamente.";
+        MostrarMensaje(ToastType.Warning, $"Se eliminaron los datos correctamente.");
+        await Task.Delay(1500);
         await Volver();
     }
     public Task Volver()

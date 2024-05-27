@@ -67,8 +67,8 @@
                 <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
             </div>
         </div>
-        <p>@Notification</p>
     </div>
+    <Toasts class="p-5" Messages="Mensaje" Placement="ToastsPlacement.TopRight" />
 </EditForm>
 
 @code {
@@ -78,13 +78,25 @@
     public List<Incentivos> ListIncentivos { get; set; } = new List<Incentivos>();
     public List<Tecnicos> ListTecnicos { get; set; } = new List<Tecnicos>();
     private bool HayIncentivo = false;
-    public string Notification { get; set; } = string.Empty;
+    List<ToastMessage> Mensaje = new List<ToastMessage>();
+
 
     protected override async Task OnInitializedAsync()
     {
         Incentivo.Fecha = DateTime.Today;
         ListTecnicos = await tecnicoService.Listar(t => true);
     }
+    private void MostrarMensaje(ToastType toastType, string mensaje)
+    {
+        Mensaje.Add(CreateToastMenssage(toastType, mensaje));
+    }
+    private ToastMessage CreateToastMenssage(ToastType toastType, string mensaje) => new ToastMessage
+    {
+        Type = toastType,
+        Title = "Notificación",
+        HelpText = $"{DateTime.Now}",
+        Message = mensaje,
+    };
     public async Task<bool> Validar()
     {
         HayIncentivo = await incentivoService.Existe(Incentivo.IncentivoId, Incentivo.Descripcion);
@@ -94,15 +106,16 @@
     {
         if (!await Validar())
         {
-            Notification = "Ya existe un técnico con esta Descripcion.";
+            MostrarMensaje(ToastType.Warning, $"Ya existe un incentivo con descripción: {Incentivo.Descripcion}.");
             return;
         }
         var guardo = await incentivoService.Guardar(Incentivo);
         if (guardo)
         {
-            Notification = "Se Guardo los datos correctamente";
-            await Volver();
+            MostrarMensaje(ToastType.Warning, $"Se Guardaron los datos correctamente.");
         }
+        else
+            MostrarMensaje(ToastType.Warning, $"Ha ocurrido un error.");
     }
     public Task Volver()
     {

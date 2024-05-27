@@ -38,16 +38,26 @@
                 <button type="submit" class="btn btn-success">Guardar <i class="bi bi-floppy-fill" /></button>
                 <button type="button" class="btn btn-outline-primary" @onclick="Volver">Volver <i class="bi bi-arrow-return-left" /></button>
             </div>
-            <p>@Notification</p>
         </div>
     </div>
+    <Toasts class="p-5" Messages="Mensaje" Placement="ToastsPlacement.TopRight" />
 </EditForm>
 
 @code {
     public TiposTecnicos TipoTecnico { get; set; } = new TiposTecnicos();
     private bool HayTipo = false;
-    public string Notification { get; set; } = string.Empty;
-
+    List<ToastMessage> Mensaje = new List<ToastMessage>();
+    private void MostrarMensaje(ToastType toastType, string mensaje)
+    {
+        Mensaje.Add(CreateToastMenssage(toastType, mensaje));
+    }
+    private ToastMessage CreateToastMenssage(ToastType toastType, string mensaje) => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Notificación",
+            HelpText = $"{DateTime.Now}",
+            Message = mensaje,
+        };
     private async Task<bool> Validar()
     {
         HayTipo = await tiposTecnicoService.Existe(TipoTecnico.TipoId, TipoTecnico.Descripcion);
@@ -57,14 +67,16 @@
     {
         if (!await Validar())
         {
-            Notification = "Ya existe un técnico con este nombre.";
+            MostrarMensaje(ToastType.Warning, $"Ya existe un TipoTécnico con Descripcion: {TipoTecnico.Descripcion}.");
             return;
         }
         var guardo = await tiposTecnicoService.Guardar(TipoTecnico);
         if (guardo)
         {
-            Notification = "Se Guardo los datos correctamente";
+            MostrarMensaje(ToastType.Warning, $"Se Guardaron los datos correctamente.");
         }
+        else
+            MostrarMensaje(ToastType.Warning, $"Ha ocurrido un error.");
     }
     public Task Volver()
     {
